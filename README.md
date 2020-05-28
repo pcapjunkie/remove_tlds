@@ -75,8 +75,11 @@ tlds=(
 And then add the following AFTER the TLD list
 
 )
+
 for i in "${tlds[@]}"; do
- sed -i -e "s/${i}$//" justdomains.log;
+
+    sed -i -e "s/${i}$//" justdomains.log;
+    
 done
 
 ---
@@ -115,4 +118,5 @@ grep "\." justdomains.log | rev | cut -d "." -f1 | rev | sort | uniq -c | sort -
       1 ipage
       1 68
       1 163
-Note: in this case I don't believe any of these domains suffixes/tld's are valid. if i did find some, i would compare the results do the original copy of the log, and figure out if I need to add more TLD's to search for. Optionally you can just re-run the script against the same log and it will remove more. but then you risk cutting out part of the legitimate unique domain names. (such as pcapjunkie.blog.blog, what if "blog" were the actual registered domain?, we would want to keep that, and only drop the suffix/tld)
+
+Note: in this case I don't believe any of these remaining domains suffixes/tld's are valid. if i did find some, i would compare the results do the original copy of the log, and figure out if I need to add more TLD's to search for. Optionally you can just re-run the script against the same log and it will remove more. but then you risk cutting out part of the legitimate unique domain names. (such as pcapjunkie.blog.blog, what if "blog" were the actual registered domain?, we would want to keep that, and only drop the suffix/tld)
