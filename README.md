@@ -37,17 +37,27 @@ grep "\\." justdomains.log | rev | cut -d "." -f1 | rev | sort | uniq -c | sort 
 106 in
     
 Step 4: prep the tld/suffix file for use with the script, and save the results into a new script file
-  #remove the comments (lines that begin with \\ sed '/^\/\//d')
-  #remove blank lines (sed '/^$/d')
-  #remove the astrixes and the connecting period (in the future i need to script just adding these as all possible variables to the other suffixes they are typically used with. until this is done, the script may need to be ran multiple times on your target log file) 
-  # here it is with all three bundled together (sed '/^\/\//d;/^$/d;s/\*\.//g')
-    #cat public_suffix_list.dat | sed '/^\/\//d;/^$/d;s/\*\.//g'
-  #add period to the beginning of each tld since this list is missing them (sed 's/^/./')
-  #sort the list by length (so that longer tld's are processed before shorter ones, eg .com before .co, so your not just left with an extra "m" for all your .com domains) then select only the tld column so we can drop the size column (awk '{print length, $0}' | sort -nr | cut -d " " -f2)
-  #escape out the periods with backslashes so the TLDs will work with sed regular expression (used later on) with literal periods (sed 's/\./\\\\./g')
-  #output the cleaned up tld list to a new script (> remtld.sh)
+  #remove the comments (lines that begin with \\) 
+    sed '/^\/\//d'
+  #remove blank lines 
+    sed '/^$/d'
+  #remove the astrixes and the connecting period 
+    (in the future i need to script just adding these as all possible variables to the other suffixes they are typically used with. until this is done, the script may need to be ran multiple times on your target log file) 
+  # here it is with all three bundled together 
+    sed '/^\/\//d;/^$/d;s/\*\.//g'
+    cat public_suffix_list.dat | sed '/^\/\//d;/^$/d;s/\*\.//g'
+  #add period to the beginning of each tld since this list is missing them, and i want to get matches on (period)+(suffix)
+    sed 's/^/./'
+  #sort the list by length 
+    (so that longer tld's are processed before shorter ones, eg .com before .co, so your not just left with an extra "m" for all your .com domains) then select only the tld column so we can drop the size column 
+    awk '{print length, $0}' | sort -nr | cut -d " " -f2
+  #escape out the periods with backslashes so the TLDs will work with sed regular expression (used later on) with literal periods 
+    sed 's/\./\\\\./g'
+  #output the cleaned up tld list to a new script 
+    > remtld.sh
 
 # the full command to "prep" the script. = 
+
 cat public_suffix_list.dat | sed '/^\/\//d;/^$/d;s/\*\.//g' | sed 's/^/./' | awk '{print length, $0}' | sort -nr | cut -d " " -f2 | rev | sed 's/\./\\\\./g' > remltd.sh
 
 Step 5: edit the script file
@@ -56,7 +66,8 @@ Step 5: edit the script file
 # i prefer nano, you can use vi/gedit/whatever
 nano tldrem.sh 
 
-you will see the suffixes/TLDs in the file (eg \\.com \\.co.tw ). add the following to the beginning, BEFORE the TLDs
+you will see the suffixes/TLDs in the file (eg \\.com \\.co.tw ). 
+add the following to the beginning, BEFORE the TLDs
 
 #!/bin/bash -x
 tlds=( 
@@ -70,12 +81,18 @@ done
 
 ---
 # A few notes on what this is doing. 
-The uses the prepped results of your tld/suffix file and adds them to the variable "tlds". then for each item in tlds (each suffix), sed is ran on the source log file specified. each row in yoru source log file is checked for matching suffixes/tlds at the end of each row in your log file. if it matches, the tld is removed. This could be tweaked to remove all matches that have a trailing space OR linefeed or whatever (eg sed 's/${i}\s//'). that way the domain name doesnt have to be the last column in the log file. i just havent tested it yet. the important thing is that we dont want matches in the middle of a domain due to ligitimate subdomains. like pcapjunkie.netmon.com , if .net matches then wed be left with pcapjunkiemon. however if the domain is followed by a / or space, or tab or linefeed or etc etc, then we can make sed match those special characters only.
+
+The uses the prepped results of your tld/suffix file and adds them to the variable "tlds". 
+then for each item in tlds (each suffix), sed is ran on the source log file specified. 
+each row in your source log file is checked for matching suffixes/tlds at the end of each row in your log file. 
+if it matches, the tld/suffix is removed. This could be tweaked so that instead of just checking the end of the line, to remove all matches that have a trailing space OR linefeed or whatever (eg sed 's/${i}\s//'). that way the domain name doesnt have to be the last column in the log file. i just havent tested it yet. the important thing is that we dont want matches in the middle of a domain due to ligitimate subdomains. like pcapjunkie.netmon.com , if .net matches then wed be left with pcapjunkiemon, when we wanted pcapjunkie.netmon to be left. however if the domain is followed by a / or space, or tab or linefeed or etc etc, then we can make sed match those special characters only.
 
 Step 6: save your changes, make the script executable
+
 chmod +x tldrem.sh
 
 Step 7: Run it, see what happens
+
 ./tldrem.sh
 + for i in '"${tlds[@]}"'
 + sed -i -e 's/\.s3\.dualstack\.ap-southeast-2\.amazonaws\.com$//' justdomains.log
@@ -87,6 +104,7 @@ Step 7: Run it, see what happens
 + sed -i -e 's/\.s3\.dualstack\.ap-northeast-1\.amazonaws\.com$//' justdomains.log
 
 Step 7: check your log file. make sure no "legitimate" domain suffixes/tld's are left
+
 grep "\." justdomains.log | rev | cut -d "." -f1 | rev | sort | uniq -c | sort -nr
       5 wordpress
       5 wix
