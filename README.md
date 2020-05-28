@@ -5,6 +5,9 @@ I needed a way to remove TLD's from a log that included domain names. a list of 
 
 Desired outcome: Remove all portions of the domain name that matches the suffix list (whether that is TLD or the complete public suffix list), and not just the portion of the domain after the last period.
 
+Why this and not existing solutions? 
+I started on this and spent a long time learning sed/awk/regex to get this done. Defeat was not an option. Also other solutions use python or perl from what i have seen. if i find a more elegant bash script then ill be happy to switch.
+
 This will be more of a walkthrough since its just a bash script. I have yet to figure out how to make this work using a separate file for the tld/suffix list inside the script. so I have resorted to just storing the results inside the script file itself. If you have different tld/suffix filters/lists then you will have to build separate scripts.
 
 First of all, download a tld or suffix list of choice. In this guide i am using the one from "The Public Suffix List". The public suffix list = "A "public suffix" is one under which Internet users can (or historically could) directly register names. Some examples of public suffixes are .com, .co.uk and pvt.k12.ma.us. The Public Suffix List is a list of all known public suffixes." I felt this list is the most complete.
