@@ -16,6 +16,7 @@ https://www.publicsuffix.org/list/
 https://github.com/publicsuffix/list
 
 Step 1: Download the list
+
 wget https://www.publicsuffix.org/list/public_suffix_list.dat --no-check-certificate
 
 Step 2: extract domain names from your log. you can use commandline kungfu or manually extract them to store in a separate file. there are other resources for parsing and extracting domain names from web/firewall/dns logs
