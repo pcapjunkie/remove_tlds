@@ -25,16 +25,16 @@ Step 3: get a baseline of what suffixes/TLD's your domaian log has it in. This p
 
 grep "\\." justdomains.log | rev | cut -d "." -f1 | rev | sort | uniq -c | sort -nr | head -10
 
-   5861 com
-    467 net
-    292 jp
-    271 ru
-    243 org
-    196 de
-    184 cn
-    136 br
-    126 fr
-    106 in
+5861 com
+467 net
+292 jp
+271 ru
+243 org
+96 de
+184 cn
+136 br
+126 fr
+106 in
     
 Step 4: prep the tld/suffix file for use with the script, and save the results into a new script file
   #remove the comments (lines that begin with \\ sed '/^\/\//d')
