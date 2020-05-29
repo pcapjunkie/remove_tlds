@@ -5,7 +5,7 @@ NOTE: Its best to view this in RAW format or else youll miss some characters and
 
 Remove TLDs (top level domain) or Public Suffix from a list of domains
 
-I needed a way to remove TLD's from a log that included domain names. a list of domains needed to be cleaned up so it can be used with freq.py. That meant leaving just the unique portion of the domain and removing the TLD's. Unfortunatly I did not have the result needed for the class, but this script is more useful. In the class they just wanted you to drop the last column of the full domain name (rev | cut -d "." -f2- | rev). 
+I needed a way to remove TLD's from a log that included domain names. a list of domains needed to be cleaned up so it can be used with freq.py. That meant leaving just the unique portion of the domain and removing the TLD's. This script is more useful than just dropping the last column of the full domain name (rev | cut -d "." -f2- | rev). 
 
 Desired outcome: Remove all portions of the domain name that matches the suffix list (whether that is TLD or the complete public suffix list), and not just the portion of the domain after the last period.
 
