@@ -27,7 +27,7 @@ Step 2: extract domain names from your log. you can use commandline kungfu or ma
 
 Step 3: get a baseline of what suffixes/TLD's your domaian log has it in. This part is a work in progress. this is just a quick way to see .. yup.. i have 990000000 .com domains in there.
 
-grep "\\." justdomains.log | rev | cut -d "." -f1 | rev | sort | uniq -c | sort -nr | head -10
+grep "\." justdomains.log | rev | cut -d "." -f1 | rev | sort | uniq -c | sort -nr | head -10
 
 5861 com
 467 net
